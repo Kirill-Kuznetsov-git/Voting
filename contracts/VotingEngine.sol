@@ -61,7 +61,7 @@ contract VotingEngine {
         bool is_candidate = false;
         for (uint i = 0; i < cVoting.allCandidates.length; i++){
             if (cVoting.allCandidates[i] == candidate){
-                is_candidate = true;qweqwe
+                is_candidate = true;
             }
         }
         require(is_candidate, "not candidate");
