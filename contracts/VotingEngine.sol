@@ -29,10 +29,39 @@ contract VotingEngine {
 
     event VotingCreated(uint votingIndex, string votingName, uint startDate, uint duration);
     event VotingEnded(uint votingIndex, uint numberPatricipants, uint winnerParticipants, address winner);
+    event RefundBack(uint votingIndex);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "You are not owner");
         _;
+    }
+
+    function getFeeAmount() public view returns(uint) {
+        return feeAmount;
+    }
+
+    function votingEnded(uint indexVoting) public view returns(bool){
+        return votings[indexVoting].ended;
+    }
+
+    function getWinner(uint indexVoting) public view returns(address){
+        return votings[indexVoting].winner;
+    }
+
+    function getAllCandidates(uint indexVoting) public view returns(address[] memory) {
+        return votings[indexVoting].allCandidates;
+    }
+
+    function getNumberVotes(uint indexVoting, address candidate) public view returns(uint){
+        return votings[indexVoting].candidates[candidate];
+    }
+
+    function getVoteOfParticipant(uint indexVoting, address participant) public view returns(address){
+        return votings[indexVoting].participants[participant];
+    }
+
+    function getTotalAmount(uint indexVoting) public view returns(uint) {
+        return votings[indexVoting].totalAmount;
     }
 
     function createVoting(string memory _title, uint waitStart, uint duration) public onlyOwner {
@@ -53,15 +82,14 @@ contract VotingEngine {
 
     function addCandidate(uint votingIndex) external {
         Voting storage cVoting = votings[votingIndex];
-        require(cVoting.startAt == 0, "already started");
-        require(block.timestamp <= cVoting.endAt, "already ended");
+        require(block.timestamp < cVoting.startAt, "already started");
         cVoting.allCandidates.push(msg.sender);
     }
 
     function vote(uint votingIndex, address candidate) external payable {
         require(msg.value >= INITIAL_PAY, "not enough funds");
         Voting storage cVoting = votings[votingIndex];
-        require(cVoting.startAt != 0, "have not started yet");
+        require(block.timestamp >= cVoting.startAt, "have not started yet");
         require(block.timestamp <= cVoting.endAt, "already ended");
 
         bool is_candidate = false;
@@ -94,7 +122,7 @@ contract VotingEngine {
     function endVoting(uint votingIndex) external {
         Voting storage cVoting = votings[votingIndex];
         require(!cVoting.ended, "already ended");
-        require(block.timestamp >= cVoting.startAt + DURATION, "can't end yet");
+        require(block.timestamp > cVoting.endAt, "can't end yet");
         cVoting.ended = true;
         address payable _to = payable(cVoting.winner);
         _to.transfer(cVoting.totalAmount - (cVoting.totalAmount * FEE) / 100);
