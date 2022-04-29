@@ -29,7 +29,6 @@ contract VotingEngine {
 
     event VotingCreated(uint votingIndex, string votingName, uint startDate, uint duration);
     event VotingEnded(uint votingIndex, uint numberPatricipants, uint winnerParticipants, address winner);
-    event RefundBack(uint votingIndex);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "You are not owner");
