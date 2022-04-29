@@ -4,10 +4,11 @@ pragma solidity ^0.8.0;
 
 contract VotingEngine {
     address private owner;
+    uint constant WAIT_DURATION = 1 days;
     uint constant DURATION = 3 days;
     uint constant INITIAL_PAY = 10 ** 16; // wei
     uint constant FEE = 10;
-    Voting[] votings;
+    Voting[] public votings;
     uint private feeAmount = 0;
 
     struct Voting {
@@ -26,8 +27,7 @@ contract VotingEngine {
         owner = msg.sender;
     }
 
-    event VotingCreated(uint votingIndex, string votingName);
-    event VotingStarted(uint votingIndex, string votingName, uint startDate, uint duration);
+    event VotingCreated(uint votingIndex, string votingName, uint startDate, uint duration);
     event VotingEnded(uint votingIndex, uint numberPatricipants, uint winnerParticipants, address winner);
 
     modifier onlyOwner() {
@@ -35,18 +35,20 @@ contract VotingEngine {
         _;
     }
 
-    function createVoting(string memory _title) external onlyOwner {
+    function createVoting(string memory _title, uint waitStart, uint duration) public onlyOwner {
         Voting storage newVoting = votings.push();
         newVoting.title = _title;
-        emit VotingCreated(votings.length - 1, _title);
+        newVoting.startAt = block.timestamp + waitStart;
+        newVoting.endAt = newVoting.startAt + duration;
+        emit VotingCreated(votings.length - 1, _title, newVoting.startAt, duration);
     }
 
-    function startVoting(uint votingIndex) external onlyOwner {
-        Voting storage cVoting = votings[votingIndex];
-        require(cVoting.startAt == 0, "already started");
-        cVoting.startAt = block.timestamp;
-        cVoting.endAt = cVoting.startAt + DURATION;
-        emit VotingStarted(votingIndex, cVoting.title, cVoting.startAt, DURATION);
+    function createVoting(string memory _title, uint waitStart) public onlyOwner {
+        createVoting(_title, waitStart, DURATION);
+    }
+
+    function createVoting(string memory _title) public onlyOwner {
+        createVoting(_title, WAIT_DURATION, DURATION);
     }
 
     function addCandidate(uint votingIndex) external {
