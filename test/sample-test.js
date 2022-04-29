@@ -129,7 +129,7 @@ describe("Voting", function () {
       const vote2Tx = await votingEngine.connect(secondParticipant).vote(0, secondCandidate.address, {value: ethers.utils.parseEther("0.01")})
       await expect(() => vote1Tx).to.changeEtherBalance(votingEngine, initialPay)
       await expect(() => vote2Tx).to.changeEtherBalance(votingEngine, initialPay)
-      await expect(votingEngine.getWinner(0)).to.eq(firstCandidate.address)
+      await expect(await votingEngine.getWinner(0)).to.eq(firstCandidate.address)
     })
 
     it("success voted", async function(){
