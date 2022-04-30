@@ -1,11 +1,10 @@
 require("@nomiclabs/hardhat-waffle");
 require("solidity-coverage");
 require("dotenv").config()
-require('./tasks/test.js');
+require('./tasks/tasks.js');
 
 
 module.exports = {
-  defaultNetwork: "rinkeby",
   networks: {
     hardhat: {
     },
