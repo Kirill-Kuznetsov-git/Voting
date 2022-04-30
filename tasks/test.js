@@ -1,20 +1,20 @@
 const { ethers } = require("ethers");
 
-const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545/");
-const account0 = new ethers.Wallet("0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80", provider);
-const account9 = new ethers.Wallet("0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6", provider);
+let provider = ethers.getDefaultProvider();
 const { abi } = require("../artifacts/contracts/VotingEngine.sol/VotingEngine.json");
-const CONTRACT_ADDRESS = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
-const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
+const CONTRACT_ADDRESS = "0xD227EFaFBeA72bFfFCc2f8C9245D1d1C5badA95B";
+let privateKey = `${process.env.PRIVATE_KEY}`;
+let wallet = new ethers.Wallet(privateKey, provider);
+let contract = new ethers.Contract(CONTRACT_ADDRESS, abi, wallet);
 
 task("withdraw", "Transfer commission to sender", async (taskArgs, hre) => {
-  await contract.connect(account0).withdraw();
+  await contract.withdraw();
 })
 
-task("create_voting", "Create new voting")
-    .addOptionalParam("title", "Title of voting", "test")
-    .addOptionalParam("startdelay", "Pause after which voting will start", 24 * 60 * 60, types.int)
-    .addOptionalParam("duration", "Duration of the voting", 3 * 24 * 60 * 60, types.int)
-    .setAction(async ({ title, startdelay, duration }) =>
-      await contract.connect(account)['createVoting(string,uint256,uint256)'](title, startdelay, duration));
-
+// task("create_voting", "Create new voting")
+//     .addOptionalParam("title", "Title of voting", "test")
+//     .addOptionalParam("startdelay", "Pause after which voting will start", 24 * 60 * 60, types.int)
+//     .addOptionalParam("duration", "Duration of the voting", 3 * 24 * 60 * 60, types.int)
+//     .setAction(async ({ title, startdelay, duration }) =>
+//       await contract.connect(account)['createVoting(string,uint256,uint256)'](title, startdelay, duration));
+//

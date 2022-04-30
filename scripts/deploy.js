@@ -4,11 +4,14 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 const hre = require("hardhat");
+const ethers = hre.ethers
 
 async function main() {
   await hre.run('compile');
 
-  const VotingEngine = await hre.ethers.getContractFactory("VotingEngine");
+  const [signer] = await ethers.getSigners();
+
+  const VotingEngine = await hre.ethers.getContractFactory("VotingEngine", signer);
   const votEngine = await VotingEngine.deploy();
 
   await votEngine.deployed();
