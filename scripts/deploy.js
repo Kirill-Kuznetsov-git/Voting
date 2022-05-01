@@ -8,7 +8,6 @@ async function main() {
 
   const VotingEngine = await hre.ethers.getContractFactory("VotingEngine", signer);
   const votEngine = await VotingEngine.deploy();
-
   await votEngine.deployed();
 
   console.log("Voting deployed to:", votEngine.address);
