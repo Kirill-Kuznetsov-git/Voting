@@ -9,7 +9,7 @@ let provider_localhost = new ethers.providers.JsonRpcProvider("http://127.0.0.1:
 const CONTRACT_ADDRESS_LOCALHOST = `${process.env.CONTRACT_ADDRESS_LOCALHOST}`;
 let wallet_localhost = new ethers.Wallet("0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80", provider_localhost);
 
-let network = "rinkeby"
+let network = "localhost"
 
 if (network === "localhost"){
     contract = new ethers.Contract(CONTRACT_ADDRESS_LOCALHOST, abi, wallet_localhost);
