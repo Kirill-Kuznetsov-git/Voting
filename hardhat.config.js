@@ -11,7 +11,7 @@ module.exports = {
     rinkeby: {
       url: `https://eth-rinkeby.alchemyapi.io/v2/${process.env.ALCHEMY_KEY}`,
       accounts: [process.env.PRIVATE_KEY],
-      gasPrice: 40000
+      gasLimit: 2100000000
     }
   },
   solidity: {
