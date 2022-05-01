@@ -10,6 +10,10 @@ async function main() {
   const votEngine = await VotingEngine.deploy();
   await votEngine.deployed();
 
+    if (network.name === "localhost") {
+        console.log("To use tasks, you have to specify address of localhost contract in .env file")
+    }
+
   console.log("Voting deployed to:", votEngine.address);
 }
 

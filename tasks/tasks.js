@@ -7,7 +7,7 @@ let wallet = new ethers.Wallet(`${process.env.PRIVATE_KEY}`, provider);
 let contract = new ethers.Contract(CONTRACT_ADDRESS_RINKEBY, abi, wallet);
 
 let provider_localhost = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545/");
-const CONTRACT_ADDRESS_LOCALHOST = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
+const CONTRACT_ADDRESS_LOCALHOST = `${process.env.CONTRACT_ADDRESS_LOCALHOST}`;
 let wallet_localhost = new ethers.Wallet("0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80", provider_localhost);
 let contract_localhost = new ethers.Contract(CONTRACT_ADDRESS_LOCALHOST, abi, wallet_localhost);
 
